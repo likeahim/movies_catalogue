@@ -1,25 +1,39 @@
 {% extends "index.html" %}
 
 {% block content %}
-
 <div class="row">
     <div class="col-lg-12 text-center">
         <h1 class="mt-5">Welcome in my movies library</h1>
         <p class="lead">You'll find only best titles here</p>
     </div>
+    <div class="col-lg-12 mb-4 text-center">
+        {% set lists = {
+        'popular': 'Popular',
+        'top_rated': 'Top Rated',
+        'upcoming': 'Upcoming',
+        'now_playing': 'Now Playing'
+        } %}
+
+        {% for list_key, list_name in lists.items() %}
+        <a href="{{ url_for('homepage', list_type=list_key) }}"
+           class="btn btn-outline-info {% if list_type == list_key %}active{% endif %}">
+            {{ list_name }}
+        </a>
+        {% endfor %}
+    </div>
+
     {% for movie in movies %}
     <div class="col-lg-3 col-md-6 mb-4">
         <div class="card h-100">
-            <img class="card-img-top" src="http://placehold.it/300x500" alt="">
+            <img src="{{ tmdb_image_url(movie.poster_path, 'w780') }}" class="card-img-top" alt="{{ movie.title }}">
             <div class="card-body">
-                <h4 class="card-title">Movie title</h4>
+                <h4 class="card-title">{{ movie.title }}</h4>
             </div>
             <div class="card-footer text-center">
-                <a href="#" class="btn btn-primary">Show more</a>
+                <a href="{{ url_for('movie_details', movie_id=movie.id) }}">Show more</a>
             </div>
         </div>
     </div>
     {% endfor %}
 </div>
-
 {% endblock %}
